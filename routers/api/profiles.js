@@ -2,9 +2,9 @@
  * 用于添加信息的api
  */
 const express = require('express');
-const passport = require('passport'); // 认证token请求
-const ProfileModel = require('../../models/Profile'); // 数据库模型
-const router = express.Router(); // 创建可安装的模块化路由处理程序
+const passport = require('passport');
+const ProfileModel = require('../../models/Profile'); 
+const router = express.Router();
 
 /**
  * GET api/profiles/test  测试

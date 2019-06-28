@@ -1,6 +1,6 @@
 const Express = require('express'); // 开启服务
 const mongoose = require('mongoose'); // 连接数据库
-const bodyParser = require('body-parser'); // router的post请求
+const bodyParser = require('body-parser'); // 获取post请求的参数
 const passport = require('passport'); // 验证token请求
 
 const confKey = require('./config/keys'); // 配置key
@@ -20,11 +20,9 @@ mongoose.connect(confKey.mongoURI, {
   console.log(err);
 });
 
-// 使用bodyParser的中间件
+// 使用bodyParser中间件
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: false
-}));
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // passport初始化，并把passport传入配置文件里
 app.use(passport.initialize());
@@ -33,7 +31,6 @@ configPassport(passport);
 // 使用router访问api
 app.use('/api/users', routerUsers);
 app.use('/api/profiles', routerProfiles);
-
 
 // 开启服务，监听端口
 app.listen(port, () => {

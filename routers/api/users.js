@@ -6,19 +6,15 @@ const bcrypt = require('bcrypt'); // 密码加密
 const jwt = require('jsonwebtoken'); // 生成token
 const passport = require('passport'); // 认证token请求
 const gravatar = require('gravatar'); // 第三方头像库
-
 const UserModel = require('../../models/User'); // 数据库模型
 const confKey = require('../../config/keys'); // 密码配置
-
 const router = express.Router(); // 创建可安装的模块化路由处理程序
 
 /**
  * GET api/users/test  测试
  */
 router.get('/test', (req, res) => {
-  res.json({
-    "msg": "hehe"
-  });
+  res.json({"msg": "hehe"});
 });
 
 /**
@@ -31,7 +27,7 @@ router.post('/register', (req, res) => {
   UserModel.findOne({
     email: req.body.email
   }).then(user => {
-    // 邮箱被注册时，直接返回邮箱已被注册，不往下执行
+    // 邮箱被注册
     if (user) {
       return res.status(404).json('邮箱已被注册');
     }
@@ -73,7 +69,7 @@ router.post('/login', (req, res) => {
   const email = req.body.email;
   const PlaintextPassword = req.body.password; // 明文密码
   UserModel.findOne({ email }).then(user => {
-    // 邮箱不存，结束代码
+    // 邮箱不存在
     if (!user) {
       return res.status(404).json('用户不存在');
     }
@@ -81,14 +77,14 @@ router.post('/login', (req, res) => {
     const hash = user.password; // hash密码
     bcrypt.compare(PlaintextPassword, hash).then(isMatch => {
       if (isMatch) { // 密码匹配成功
-        const payload = {
+        const payload = { // 用户角色
           id: user.id,
           name: user.name,
           email: user.email,
           avatar: user.avatar,
           identity: user.identity,
           createDate: user.date
-        } // 用户角色
+        }
         const secretOrKey = confKey.secretOrKey; // 密钥
         const expiresIn = { expiresIn: 3600 } // 有效期
         // 生成token
@@ -96,7 +92,7 @@ router.post('/login', (req, res) => {
           if (err) throw err;
           res.json({
             msg: 'success',
-            token: `Bearer ${token}` // 必须写Bearer ，否则token认证时匹配不上
+            token: `Bearer ${token}` // 必须写Bearer ，否则token认证时无法匹配
           });
         });
       } else {
